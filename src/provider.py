@@ -13,5 +13,4 @@ class BaseProvider(ABC):
     @abstractmethod
     def generate(self, prompt: str) -> LLMResponse:
         """Generate a response for the given prompt."""
-        # TODO: implement this abstract method contract.
         raise NotImplementedError("Implement BaseProvider.generate().")

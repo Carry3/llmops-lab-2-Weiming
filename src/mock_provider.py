@@ -11,5 +11,18 @@ class MockProvider(BaseProvider):
 
     def generate(self, prompt: str) -> LLMResponse:
         """Return a deterministic mock response."""
-        # TODO: implement this method.
-        raise NotImplementedError("Implement MockProvider.generate().")
+        prompt_text = str(prompt).strip()
+        if not prompt_text:
+            raise ValueError("prompt must not be empty")
+
+        response_text = (
+            f"Mock response for: {prompt_text}. "
+            "This deterministic output is returned by the mock provider "
+            "to support local testing and validation."
+        )
+        return LLMResponse(
+            text=response_text,
+            provider="mock",
+            model="mock-model",
+            usage={"tokens": 0},
+        )
