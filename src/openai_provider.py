@@ -24,26 +24,23 @@ class OpenAIProvider(BaseProvider):
 
         client = OpenAI(api_key=self.api_key)
 
-        try:
-            response = client.responses.create(model=self.model, input=prompt)
-            text = getattr(response, "output_text", None)
-            if text is None:
-                try:
-                    text = response.output[0].content[0].text
-                except (AttributeError, IndexError, TypeError):
-                    text = ""
+        response = client.responses.create(model=self.model, input=prompt)
+        text = getattr(response, "output_text", None)
+        if text is None:
+            try:
+                text = response.output[0].content[0].text
+            except (AttributeError, IndexError, TypeError):
+                text = ""
 
-            usage = getattr(response, "usage", None)
-            if usage is not None and hasattr(usage, "model_dump"):
-                usage = usage.model_dump()
-            elif usage is None:
-                usage = {"tokens": 0}
+        usage = getattr(response, "usage", None)
+        if usage is not None and hasattr(usage, "model_dump"):
+            usage = usage.model_dump()
+        elif usage is None:
+            usage = {"tokens": 0}
 
-            return LLMResponse(
-                text=str(text) if text is not None else "",
-                provider="openai",
-                model=self.model,
-                usage=usage,
-            )
-        except Exception:
-            raise
+        return LLMResponse(
+            text=str(text) if text is not None else "",
+            provider="openai",
+            model=self.model,
+            usage=usage,
+        )
